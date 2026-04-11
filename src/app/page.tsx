@@ -16,6 +16,8 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [sessionId, setSessionId] = useState("");
+  const [userId, setUserId] = useState("test_user");
+  const [isEditingUserId, setIsEditingUserId] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -52,7 +54,7 @@ export default function Home() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed, session_id: sessionId }),
+        body: JSON.stringify({ message: trimmed, session_id: sessionId, user_id: userId }),
       });
 
       if (!res.ok) {
@@ -126,9 +128,35 @@ export default function Home() {
             Stack AI
           </h1>
         </div>
-        <span className="text-xs text-gray-400 font-mono">
-          {sessionId.slice(0, 16)}...
-        </span>
+        <div className="flex items-center gap-3">
+          {isEditingUserId ? (
+            <input
+              type="text"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+              onBlur={() => setIsEditingUserId(false)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") setIsEditingUserId(false);
+              }}
+              autoFocus
+              className="text-xs font-mono px-2 py-1 rounded-md border border-indigo-400 dark:border-indigo-600 bg-white dark:bg-[#0d0d0d] text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-36"
+            />
+          ) : (
+            <button
+              onClick={() => setIsEditingUserId(true)}
+              className="flex items-center gap-1.5 text-xs font-mono text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              title="Click to edit User ID"
+            >
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
+              {userId}
+            </button>
+          )}
+          <span className="text-xs text-gray-400 font-mono">
+            {sessionId.slice(0, 16)}...
+          </span>
+        </div>
       </header>
 
       {/* Messages */}
