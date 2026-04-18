@@ -16,7 +16,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [sessionId, setSessionId] = useState("");
-  const [userId, setUserId] = useState("test_user");
+  const [userId, setUserId] = useState("11");
   const [isEditingUserId, setIsEditingUserId] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
